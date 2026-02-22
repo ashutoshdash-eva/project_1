@@ -24,7 +24,7 @@ const plane = new THREE.Mesh(
     new THREE.PlaneGeometry(12, 12),
     new THREE.MeshStandardMaterial({ color: 'white', side: THREE.DoubleSide })
 );
-plane.rotation.x = Math.PI / 2;
+plane.rotation.x = -Math.PI / 2;
 scene.add(plane);
 
 let currentMesh = null;
