@@ -231,6 +231,8 @@ document.getElementById("lightSelect").addEventListener("change", (e) => {
             break;
         case "hemisphere":
             currentLight = new THREE.HemisphereLight('white', 'blue', 1);
+            const hemiHelper = new THREE.HemisphereLightHelper(currentLight, 5);
+            scene.add(hemiHelper);
             break;
         case "point":
             currentLight = new THREE.PointLight('white', 50, 100);
