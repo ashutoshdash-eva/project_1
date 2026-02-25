@@ -1,293 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project 1</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
             margin: 0;
-            overflow: hidden;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+            overflow: hidden; /* Prevents scrollbars for the 3D canvas */
+            background-color: #121212; /* Dark fallback background */
         }
 
-        /* Profile card */
-        .profile-card {
-            position: fixed;
-            left: 16px;
-            top: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(255, 255, 255, 0.06);
-            color: #fff;
-            padding: 10px 14px;
-            border-radius: 10px;
-            backdrop-filter: blur(6px);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
-            z-index: 1000;
-            min-width: 180px;
-        }
-
-        .profile-card .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            flex: 0 0 80px;
-            overflow: hidden;
-            display: inline-grid;
-            place-items: center;
-            background: linear-gradient(135deg, #6C5CE7, #00BFA6);
-        }
-
-        .profile-card .avatar svg {
-            width: 100%;
-            height: 100%;
-        }
-
-        .profile-card .avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: block;
-        }
-
-        .profile-card .meta {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .profile-card .name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .profile-card .role {
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.75);
-        }
-
-        /* ===== Modern Glass Control Card ===== */
-
-        .card {
-            position: absolute;
-            right: 20px;
-            top: 20px;
-            width: 260px;
-            padding: 20px;
-
+        /* Glassmorphism Panel Utility */
+        .glass-panel {
             background: rgba(255, 255, 255, 0.07);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-
-            border-radius: 16px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-
             box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
-
-            color: #f0f0f0;
-            font-family: 'Segoe UI', Roboto, sans-serif;
-
-            z-index: 1000;
         }
 
-        /* Title */
+        .avatar-gradient { background: linear-gradient(135deg, #6C5CE7, #00BFA6); }
 
-        .card h3 {
-            margin-bottom: 12px;
-            font-weight: 600;
-            font-size: 16px;
-            letter-spacing: 0.5px;
-        }
-
-        /* Layout container */
-
-        .card>div,
-        .card {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        /* Label rows */
-
-        .card label {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            font-size: 13px;
-            font-weight: 500;
-
+        /* --- Customizing Bootstrap Forms for the Glass Theme --- */
+        .glass-panel .form-label {
             color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 500;
+            margin-bottom: 6px;
         }
 
-        /* ===== Select dropdown styling ===== */
-
-        select {
-            width: 100%;
-
-            background: rgba(0, 0, 0, 0.35);
+        .glass-panel .form-select {
+            background-color: rgba(0, 0, 0, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.15);
-
-            border-radius: 8px;
-            padding: 8px;
-
             color: #fff;
             font-size: 14px;
-
-            outline: none;
             transition: all 0.2s ease;
         }
 
-        select:focus {
+        .glass-panel .form-select:focus {
             border-color: #00ffc3;
             box-shadow: 0 0 8px rgba(0, 255, 195, 0.3);
+            background-color: rgba(0, 0, 0, 0.5);
         }
 
-        /* ===== Number inputs (Project 2 style) ===== */
-
-        input[type="number"] {
-            width: 80px;
-
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-
-            border-radius: 6px;
-            padding: 5px 8px;
-
-            color: #00ffc3;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-
-            outline: none;
-            transition: all 0.2s ease;
+        /* Fix dropdown option colors in dark mode */
+        .glass-panel .form-select option {
+            background-color: #222;
+            color: #fff;
         }
 
-        input[type="number"]:focus {
-            border-color: #00ffc3;
-            background: rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 8px rgba(0, 255, 195, 0.3);
-        }
-
-        /* ===== Checkbox row ===== */
-
-        .checkbox-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-
-            font-size: 13px;
-            text-transform: none;
-        }
-
-        /* Custom checkbox */
-
-        .checkbox-row input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #00ffc3;
+        /* Custom Checkbox Color */
+        .glass-panel .form-check-input {
+            background-color: rgba(0, 0, 0, 0.35);
+            border-color: rgba(255, 255, 255, 0.2);
             cursor: pointer;
         }
 
-        /* ===== Button ===== */
-
-        button {
-            margin-top: 8px;
-            padding: 10px;
-
-            background: linear-gradient(135deg, #00BFA6, #6C5CE7);
-            border: none;
-            border-radius: 8px;
-
-            color: #fff;
-            font-weight: 600;
-            cursor: pointer;
-
-            transition: all 0.2s ease;
-        }
-
-        button:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 20px rgba(0, 255, 195, 0.35);
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        /* Remove <br> gaps */
-
-        br {
-            display: none;
+        .glass-panel .form-check-input:checked {
+            background-color: #00ffc3;
+            border-color: #00ffc3;
         }
     </style>
 </head>
+<body class="text-white">
 
-<body>
-    <div class="profile-card" aria-label="Profile">
-        <div class="avatar" aria-hidden="true">
-            <img src="./Image/IMG_20260222_005742.png" alt="Ashutosh Dash Avatar">
+    <a href="../index.html" class="btn btn-outline-light position-fixed bottom-0 start-50 translate-middle-x mb-4 rounded-pill px-4 glass-panel" style="z-index: 1000; text-decoration: none;">
+        ← Back to Hub
+    </a>
+
+    <div class="position-fixed top-0 start-0 m-3 p-2 rounded-4 shadow d-flex align-items-center gap-3 glass-panel" style="z-index: 1000; min-width: 200px;">
+        <div class="rounded-circle overflow-hidden d-flex justify-content-center align-items-center flex-shrink-0 avatar-gradient" style="width: 65px; height: 65px;">
+            <img src="../Image/IMG_20260222_005742.png" alt="Ashutosh Dash" class="w-100 h-100 object-fit-cover" onerror="this.style.display='none'">
         </div>
-        <div class="meta">
-            <div class="name">Ashutosh Dash</div>
-            <div class="role">Software Engineer - Configurator Developer</div>
+        <div class="d-flex flex-column">
+            <span class="fw-bold" style="font-size: 15px;">Ashutosh Dash</span>
+            <span class="text-white-50" style="font-size: 12px;">Software Engineer - Configurator Developer</span>
         </div>
     </div>
-    <div class="card">
-        <h3>Options</h3>
 
-        <select id="shapeSelect">
-            <option value="1">Box</option>
-            <option value="2">Capsule</option>
-            <option value="3">Cone</option>
-            <option value="4">Cylinder</option>
-            <option value="5">Sphere</option>
-            <option value="6">Torus</option>
-            <option value="7">TorusKnot</option>
-            <option value="8">Octahedron</option>
-            <option value="9">Tetrahedron</option>
-            <option value="0">Dodecahedron</option>
-        </select>
-        <br>
-        <select id="materialSelect">
-            <option value="basic">Basic</option>
-            <option value="standard">Standard</option>
-            <option value="physical">Physical</option>
-            <option value="phong">Phong</option>
-            <option value="lambert">Lambert</option>
-            <option value="toon">Toon</option>
-            <option value="normal">Normal</option>
-            <option value="matcap">Matcap</option>
-            <option value="depth">Depth</option>
-            <option value="wireframe">Wireframe</option>
-        </select>
-        <br>
-        <select id="cameraSelect">
-            <option value="perspective">Perspective</option>
-            <option value="orthographic">Orthographic</option>
-        </select>
-        <br>
-        <select id="lightSelect">
-            <option value="ambient">Ambient</option>
-            <option value="directional">Directional</option>
-            <option value="hemisphere">Hemisphere</option>
-            <option value="point">Point</option>
-            <option value="spot">Spot</option>
-            <!-- <option value="rectArea"></option> -->
-        </select>
-        <br>
-        <div class="checkbox-row">
-            <input type="checkbox" id="shadowToggle">
-            <label for="shadowToggle">Enable Shadows</label>
+    <div class="position-fixed top-0 end-0 m-3 p-4 rounded-4 glass-panel" style="width: 280px; z-index: 1000;">
+        <h3 class="fw-bold fs-6 mb-3" style="letter-spacing: 0.5px;">Options</h3>
+
+        <div class="d-flex flex-column gap-3">
+            
+            <div>
+                <label for="shapeSelect" class="form-label d-flex justify-content-between">Shape:</label>
+                <select id="shapeSelect" class="form-select shadow-none">
+                    <option value="1">Box</option>
+                    <option value="2">Capsule</option>
+                    <option value="3">Cone</option>
+                    <option value="4">Cylinder</option>
+                    <option value="5">Sphere</option>
+                    <option value="6">Torus</option>
+                    <option value="7">TorusKnot</option>
+                    <option value="8">Octahedron</option>
+                    <option value="9">Tetrahedron</option>
+                    <option value="0">Dodecahedron</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="materialSelect" class="form-label d-flex justify-content-between">Material:</label>
+                <select id="materialSelect" class="form-select shadow-none">
+                    <option value="basic">Basic</option>
+                    <option value="standard">Standard</option>
+                    <option value="physical">Physical</option>
+                    <option value="phong">Phong</option>
+                    <option value="lambert">Lambert</option>
+                    <option value="toon">Toon</option>
+                    <option value="normal">Normal</option>
+                    <option value="matcap">Matcap</option>
+                    <option value="depth">Depth</option>
+                    <option value="wireframe">Wireframe</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="cameraSelect" class="form-label d-flex justify-content-between">Camera:</label>
+                <select id="cameraSelect" class="form-select shadow-none">
+                    <option value="perspective">Perspective</option>
+                    <option value="orthographic">Orthographic</option>
+                </select>
+            </div>
+
+            <div>
+                <label for="lightSelect" class="form-label d-flex justify-content-between">Light Type:</label>
+                <select id="lightSelect" class="form-select shadow-none">
+                    <option value="ambient">Ambient</option>
+                    <option value="directional">Directional</option>
+                    <option value="hemisphere">Hemisphere</option>
+                    <option value="point">Point</option>
+                    <option value="spot">Spot</option>
+                </select>
+            </div>
+
+            <div class="form-check mt-1">
+                <input class="form-check-input shadow-none" type="checkbox" id="shadowToggle">
+                <label class="form-check-label text-white-50" for="shadowToggle" style="font-size: 14px; cursor: pointer;">
+                    Enable Shadows
+                </label>
+            </div>
+
         </div>
     </div>
+
     <script type="module" src="main.js"></script>
 </body>
-
 </html>
